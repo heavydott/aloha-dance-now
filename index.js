@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const {connectDb} = require('./utils/db');
 const cors = require('cors');
 const dogApiService = require('./services/dogapi');
-const router = require('./routes/index');
 const dbService = require('./services/db');
 
 const app = express();
@@ -38,9 +37,9 @@ async function bootstrap() {
 
     // db collections
     app.use(async (req, res, next) => {
-        // await dbService.removeAll();
-        // console.log('clear db');
-        // await dbService.save(data);
+        await dbService.removeAll();
+        console.log('clear db');
+        await dbService.save(data);
         next();
     });
 
