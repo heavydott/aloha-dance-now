@@ -10,7 +10,7 @@ const prepareDataFromDogApi = async (data) => {
   const result = [];
   for (let i = 0; i < data.data.message.length; i++) {
     // for (let j = 0; j < data[i].data.message.length; j++) {
-      result.push(breedParseUrl(data.data.message[i]));
+    result.push(breedParseUrl(data.data.message[i]));
     // }
   }
   return result;
@@ -27,20 +27,20 @@ const breedParseUrl = (url) => {
 };
 
 const prepareWithoutDoubles = (data, newData) => {
-    const result = newData.filter(function (curr, index) {
-        let flag = data.find(function (curr2) {
-            if (curr.breed == curr2.breed) {
-                return true;
-            }
-        });
-        if (!flag && (data.length + (index + 1)) <= count) {
-            return curr;
-        }
+  const result = newData.filter(function (curr, index) {
+    let flag = data.find(function (curr2) {
+      if (curr.breed == curr2.breed) {
+        return true;
+      }
     });
-    return result;
+    if (!flag && data.length + (index + 1) <= count) {
+      return curr;
+    }
+  });
+  return result;
 };
 
-const getData = async arr => {
+const getData = async (arr) => {
   const dataFromApi = await getDataFromDogsApi(); // достаю рандомные 50
   const data = await prepareDataFromDogApi(dataFromApi); // привожу их в порядок, вид, которые мне нужен
   const checkedData = prepareWithoutDoubles(arr, data); // проверяю повторки
