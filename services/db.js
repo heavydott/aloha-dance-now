@@ -1,5 +1,7 @@
 const breedRepo = require('../repositories/breed');
 const dogRepo = require('../repositories/dog');
+const {CustomError} = require("../errors/db-error");
+const {NO_CONTENT} = require("http-status-codes");
 
 const get = async (filter = '', search = '') => {
   let breedFilter = {};
@@ -27,6 +29,12 @@ const get = async (filter = '', search = '') => {
       image: curr.image,
     };
   });
+  if(!result.length) {
+    throw new CustomError({
+      status: NO_CONTENT,
+      message: "There is no data!"
+    });
+  }
   return result;
 };
 

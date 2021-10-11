@@ -3,6 +3,9 @@ const { connectDb } = require('./utils/db');
 const cors = require('cors');
 const dogApiService = require('./services/dogapi');
 const dbService = require('./services/db');
+const { CustomError } = require('./errors/db-error');
+const { NO_CONTENT } = require('http-status-codes');
+const { errorHandler, catchDecorator } = require('./utils/error-handling');
 
 const app = express();
 
@@ -10,8 +13,6 @@ app.use(cors());
 app.use(express.json());
 
 async function bootstrap() {
-  connectDb();
-
   let data;
   let breedFilter, search;
 
@@ -40,14 +41,15 @@ async function bootstrap() {
     next();
   });
 
-  app.use('/', async (req, res) => {
-    console.log('routing');
-    res.json(await dbService.get(breedFilter, search));
-  });
+  app.use('/', catchDecorator(async (req, res) => {
+      res.json(await dbService.get(breedFilter, search));
+  }));
+
+  app.use(errorHandler);
 
   app.listen(3000, () => {
     console.log('App is running');
   });
 }
 
-bootstrap();
+connectDb(bootstrap);
